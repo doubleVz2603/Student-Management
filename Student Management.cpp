@@ -15,11 +15,13 @@ typedef struct Node
 	} node;
 class LinkList{
 	private:
-		node* head;// global
+		node* head;
+		node* tail;// global
 	public:
 		LinkList()
 		{
     		head = NULL;
+    		tail = NULL;
 		}
 		node* create(int i, float g, string name1, string name2)
 		{
@@ -42,6 +44,7 @@ class LinkList{
 		void destroy(void)
 		{
 	    	head = NULL;
+	    	tail = NULL;
 	    	cout<<"your list is deleted !"<<endl;
 		}
 		void print_list()
@@ -77,60 +80,69 @@ class LinkList{
 		{
 	    	node* temp;
 	    	temp = head;
+	    	
 	    	if(temp == NULL)
         	{
             	node*n = create(i, g, name1, name2);
-         		n->prev = head;
+//         		n->prev = head;
           		head = n;
+          		tail = n;
           		return 1;
         	}
         	else
         	{
-            	if(temp->next == NULL && temp->data.id < i)
-            	{
-                	node* n = create(i, g, name1, name2);
-                	n->prev = temp;
-                	temp->next = n;
-                	return 1;
-            	}
-            	if(temp->next == NULL && temp->data.id > i)
-            	{
-                	if(i == temp->data.id)
-                	{
-                    	cout<< "this student had available in the list make sure and enter again"<< endl;
-
-                	}
-                	node* n = create(i, g, name1, name2);
-                	n->next = temp;
-                	n->prev = head;
-                	temp->prev = n;
-                	head = n;
-                	return 1;
-            	}
-            	while(temp->data.id < i && temp->next != NULL)
-            	{
-					temp = temp->next;
-				}
-            	if(temp->data.id > i)
-            	{
-                	node* n = create(i, g, name1, name2);
-               		n->next = temp;
-                	n->prev = temp->prev;
-                	temp->prev->next = n;
-					return 1;
-
-            	}
-           		else if(i == temp->data.id)
-                {
-                    cout<< "this student available in the list make sure and enter again"<< endl;
-                }
-                else
-				{
-                	node* n = create(i, g, name1, name2);
-                 	n->prev = temp;
-                	temp->next = n;
-        			return 1;
-				}
+        		node* n = create(i, g, name1, name2);
+        		n->prev = tail;
+        		tail->next = n;
+        		tail = n;
+        		
+//        		while(temp == NULL)
+//            	if(temp->next == NULL && temp->data.id < i)
+//            	{
+//                	node* n = create(i, g, name1, name2);
+//                	n->prev = temp;
+//                	temp->next = n;
+//                	return 1;
+//            	}
+//            	else if(temp->next)
+//            	if(temp->next == NULL && temp->data.id > i)
+//            	{
+//                	if(i == temp->data.id)
+//                	{
+//                    	cout<< "this student had available in the list make sure and enter again"<< endl;
+//
+//                	}
+//                	node* n = create(i, g, name1, name2);
+//                	n->next = temp;
+//                	n->prev = head;
+//                	temp->prev = n;
+//                	head = n;
+//                	return 1;
+//            	}
+//            	while(temp->data.id < i && temp->next != NULL)
+//            	{
+//					temp = temp->next;
+//				}
+//            	if(temp->data.id > i)
+//            	{
+//                	node* n = create(i, g, name1, name2);
+//               		n->next = temp;
+//                	n->prev = temp->prev;
+//                	temp->prev->next = n;
+//					return 1;
+//
+//            	}
+//           		else if(i == temp->data.id)
+//                {
+//                    cout<< "this student available in the list make sure and enter again"<< endl;
+//                }
+//                else
+//				{
+//                	node* n = create(i, g, name1, name2);
+//                 	n->prev = temp;
+//                	temp->next = n;
+//        			return 1;
+//				}
     		}
         }
 		int delete_by_id(int i)
@@ -189,7 +201,7 @@ class LinkList{
                 }
 
         	}
-        	                return 0;
+        	return 0;
 		}
 		int sum()
 		{
@@ -207,7 +219,7 @@ class LinkList{
 };
 void menu()
 {
-		system("color 0A");
+	system("color 0A");
     LinkList l;
     int i;
     float g;
