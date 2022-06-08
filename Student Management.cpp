@@ -14,9 +14,9 @@ typedef struct Node
 		Node *next, *prev;
 	} node;
 class LinkList{
-	private:
+	public:
 		node* head;
-		node* tail;// global
+		node* tail;
 	public:
 		LinkList()
 		{
@@ -54,20 +54,19 @@ class LinkList{
 	    	if(temp == NULL)
 			{
             	cout<< "nothing to print ... the list is empty "<< endl;
-            	return;
+//            	return;
 			}
-	    	while(temp)
-        	{
-            	printInfo(temp);
-            	temp = temp->next;
-        	}
+        	for(temp = head; temp != NULL; temp = temp->next)
+			{
+				printInfo(temp);
+			}
 		}
 		void printInfo(node* n)
 		{
 	   		if(n==NULL)
        		{
            		cout<<"sorry your list is empty ";
-           		return ;
+//           		return ;
        		}
        		else
        		{
@@ -76,132 +75,102 @@ class LinkList{
 				cout<< "GPA: "<< n->data.gpa<< endl<< endl;
 	    	}
 		}
-		int insertOreder(int i, float g, string name1, string name2)
+		int duplicateCheck(int i)
 		{
-	    	node* temp;
-	    	temp = head;
-	    	
-	    	if(temp == NULL)
-        	{
-            	node*n = create(i, g, name1, name2);
-//         		n->prev = head;
-          		head = n;
-          		tail = n;
-          		return 1;
-        	}
-        	else
-        	{
-        		node* n = create(i, g, name1, name2);
-        		n->prev = tail;
-        		tail->next = n;
-        		tail = n;
-        		
-//        		while(temp == NULL)
-//            	if(temp->next == NULL && temp->data.id < i)
-//            	{
-//                	node* n = create(i, g, name1, name2);
-//                	n->prev = temp;
-//                	temp->next = n;
-//                	return 1;
-//            	}
-//            	else if(temp->next)
-//            	if(temp->next == NULL && temp->data.id > i)
-//            	{
-//                	if(i == temp->data.id)
-//                	{
-//                    	cout<< "this student had available in the list make sure and enter again"<< endl;
-//
-//                	}
-//                	node* n = create(i, g, name1, name2);
-//                	n->next = temp;
-//                	n->prev = head;
-//                	temp->prev = n;
-//                	head = n;
-//                	return 1;
-//            	}
-//            	while(temp->data.id < i && temp->next != NULL)
-//            	{
-//					temp = temp->next;
-//				}
-//            	if(temp->data.id > i)
-//            	{
-//                	node* n = create(i, g, name1, name2);
-//               		n->next = temp;
-//                	n->prev = temp->prev;
-//                	temp->prev->next = n;
-//					return 1;
-//
-//            	}
-//           		else if(i == temp->data.id)
-//                {
-//                    cout<< "this student available in the list make sure and enter again"<< endl;
-//                }
-//                else
-//				{
-//                	node* n = create(i, g, name1, name2);
-//                 	n->prev = temp;
-//                	temp->next = n;
-//        			return 1;
-//				}
+			node* temp = new node;
+			int count = 0;
+			for(temp = head; temp != NULL; temp = temp->next)
+			{
+				if(temp->data.id == i)
+				{
+					count ++;
+					break;
+				}
+			}
+			return count;
+		}
+		void insert(int i, float g, string name1, string name2)
+		{
+
+			node* n = create(i, g, name1, name2);
+
+			if(duplicateCheck(i) == 1)
+			{
+				cout<<"ID has been duplicated, please re-enter"<< endl;
+			}
+    		else
+    		{
+    			if(head == NULL && tail == NULL)
+        		{
+
+          			head = n;
+          			tail = n;
+        		}
+        		else
+        		{
+        			node* n = create(i, g, name1, name2);
+        			n->prev = tail;
+        			tail->next = n;
+        			tail = n;
+    			}
     		}
         }
-		int delete_by_id(int i)
+        
+		void delete_by_id(int i)
 		{
 	    	node* temp = new node;
 	    	temp = head;
-	    	while(temp)
-        	{
-            	if(temp->data.id == i)
-            	{
+			if(duplicateCheck(i) == 0)
+			{
+				cout<<"The ID is not in the list. Please re-enter: ";
+	    		cin>>i;
+	    		delete_by_id(i);
+			}
+				for(temp = head; temp != NULL; temp = temp->next)
+				{
+				if(temp->data.id == i)
+				{
             		if(temp->prev == NULL)
-            		{
-            			temp->next->prev = NULL;
-            			head = temp->next;
-            			delete temp;
-            			return 1;
-            		}
-            		else if(temp->next == NULL)
-            		{
-            			temp->prev->next = NULL;
-            			delete temp;
-            			return 1;
+           			{
+           				temp->next->prev = NULL;
+           				head = temp->next;
+           				delete temp;
+					}
+           			else if(temp->next == NULL)
+           			{
+           				temp->prev->next = NULL;
+           				delete temp;					
 					}
 					else
 					{
 						temp->prev->next = temp->next;
-                		temp->next->prev = temp->prev;
-                		temp->next = NULL;
-                		temp->prev = NULL;
-            			delete temp;
-						return 1;
+               			temp->next->prev = temp->prev;
+               			temp->next = NULL;
+               			temp->prev = NULL;
+           				delete temp;
 					}
-            	}
-            	else
-            	{
-                	temp = temp->next;
-                }
-        	}
+				}
+			}
+			
        	}
-		int search_by_id(int i)
+		void search_by_id(int i)
 		{
+			int count = 0;
 	    	node* temp;
-	    	temp = head;
-	    	while(temp)
-        	{
-            	if(temp->data.id == i)
-            	{
-                	cout<<" founded ^_^ ,  and his information is "<<endl;
+	    	for(temp = head; temp != NULL; temp = temp->next)
+			{
+				if(temp->data.id == i)
+				{
+					cout<<" founded ^_^ ,  and his information is "<<endl;
                 	printInfo(temp);
-                	return 1;
-            	}
-            	else
-            	{
-                	temp = temp->next;
-
-                }
-
-        	}
-        	return 0;
+                	count ++;
+                	break;
+				}
+			}
+			if(count == 0)
+			{
+				cout<<"Student is not in the list"<< endl;
+			}
 		}
 		int sum()
 		{
@@ -257,7 +226,7 @@ void menu()
 			cin>>i;
 			cout<< "GPA: "; 
 			cin>> g;
-          	l.insertOreder(i, g, name1, name2);
+          	l.insert(i, g, name1, name2);
           	cout<< "press 0 to return main menu: ";
           	cin>> inchoice;
           	system("CLS");
@@ -304,7 +273,6 @@ void menu()
 		}
 	}
 }
-
 
 int main(){
 	menu();
